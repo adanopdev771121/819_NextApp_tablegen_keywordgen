@@ -1,41 +1,15 @@
-"use client";
+import { fetchWeatherData } from "@/lib/utils/fetchWeatherData";
 
-import { useEffect, useState } from "react";
-
-interface stringIndexedWeather {
+interface StringIndexedWeather {
   [key: string]: string;
 }
 
-export default function Page({ params }: { params: { cityname: string } }) {
-  const [weather, setWeather] = useState<stringIndexedWeather>({
-    location: "",
-    country: "",
-    weather: "",
-    temperature: "",
-    humidity: "",
-    wind: "",
-    windDirection: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const climate = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=996b4c80de92403d85d195917240508&q=${params.cityname}`
-      ).then((res) => res.json());
-
-      setWeather({
-        location: climate.location.name,
-        country: climate.location.country,
-        weather: climate.current.condition.text,
-        temperature: climate.current.temp_c,
-        humidity: climate.current.humidity,
-        wind: climate.current.wind_mph,
-        windDirection: climate.current.wind_dir,
-      });
-    };
-
-    fetchData();
-  });
+export default async function Page({
+  params,
+}: {
+  params: { cityname: string };
+}) {
+  const weather: StringIndexedWeather = await fetchWeatherData(params.cityname);
 
   return (
     <div>
